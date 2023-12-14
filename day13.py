@@ -13,27 +13,40 @@ def isReflection(input:str, start:int):
         lasthalf = lasthalf[(len(lasthalf)-length):]
     # print(firsthalf)
     # print(lasthalf)
-    if(firsthalf == lasthalf):
-        return True
-    return False
+    return mismatches(firsthalf, lasthalf)
 
-def findVerticalReflection(pattern:list, options:set=None) -> int:
-    if not options:
-        options = set(range(0,len(pattern[0])))
+
+def mismatches(first:str, second:str) -> int:
+    mismatches = 0
+    for i in range(0,len(first)):
+        if not first[i] == second[i]:
+            mismatches +=1
+        if mismatches > 1:
+            return 2
+    return mismatches
+
+
+def findVerticalReflection(pattern:list) -> int:
+    options = dict.fromkeys(range(len(pattern[0])),False)
     for row in pattern:
         for i in range(len(row)):
             if i in options:
-                if not isReflection(row,i):
-                    options.remove(i)
-                    # print("removed "+str(i))
+                mismatches = isReflection(row,i)
+                if mismatches == 2:
+                    del options[i]
+                elif mismatches == 1:
+                    if options[i]: # already had a smudge, can't have more
+                        del options[i]
+                    else:
+                        options[i] = True # first smudge, so is fine
         # did the row have points of reflection? if not, we ready
         # if multiple, keep checking next rows too
         if len(options) <= 0:
             return -1
-    if len(options) == 1:
-        return options.pop()
-    else:
-        return -1 # should never go here, but just in case
+    for key in options:
+        if options[key]: # found exactly one smudge
+            return key
+    return -1 # only found the og line i guess
 
 def transpose(pattern: list) -> list:
     transposedPattern = [""] * len(pattern[0])
