@@ -1,7 +1,3 @@
-# import numpy
-
-print("flu or not, time to code")
-
 def isReflection(input:str, start:int):
     if start <=0 or start >= len(input):
         return False
@@ -58,38 +54,42 @@ def transpose(pattern: list) -> list:
 def findHorizontalReflection(pattern:list) -> int:
     return findVerticalReflection(transpose(pattern))
 
-with open("input_day13.txt") as input:
-    patterns = []
+if __name__ == "__main__":
+
+    print("flu or not, time to code")
+
+    with open("input_day13.txt") as input:
+        patterns = []
+        index = 0
+        patterns.append([])
+        for row in input:
+            if (len(row) <= 1):
+                index += 1
+                patterns.append([])
+                continue
+            patterns[index].append(row.strip('\n'))
+
+    sum = 0
+    splits = {} #index: v/h, splitSpot
     index = 0
-    patterns.append([])
-    for row in input:
-        if (len(row) <= 1):
-            index += 1
-            patterns.append([])
-            continue
-        patterns[index].append(row.strip('\n'))
-
-sum = 0
-splits = {} #index: v/h, splitSpot
-index = 0
 
 
-for pattern in patterns:
-    columnsToLeft = findVerticalReflection(pattern)
-    if columnsToLeft >0:
-        sum += columnsToLeft
-        print("index "+str(index)+": v, "+str(columnsToLeft))
-    else:
-        #flip the shit and check again
-        rowsAbove = findHorizontalReflection(pattern)
-        if rowsAbove > 0:
-            sum += 100*rowsAbove
-            print("index "+str(index)+": h, "+str(rowsAbove))
+    for pattern in patterns:
+        columnsToLeft = findVerticalReflection(pattern)
+        if columnsToLeft >0:
+            sum += columnsToLeft
+            print("index "+str(index)+": v, "+str(columnsToLeft))
         else:
-            print("this shouldn't have happened???")
-    index += 1
+            #flip the shit and check again
+            rowsAbove = findHorizontalReflection(pattern)
+            if rowsAbove > 0:
+                sum += 100*rowsAbove
+                print("index "+str(index)+": h, "+str(rowsAbove))
+            else:
+                print("this shouldn't have happened???")
+        index += 1
 
-print(sum)
+    print(sum)
 
 
 
